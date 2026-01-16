@@ -13,6 +13,7 @@
 # testing
 /coverage
 
+build/
 # next.js
 /.next/
 /out/
@@ -39,3 +40,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Virtual environments
+.env
+venv/
+env/
+.venv/
