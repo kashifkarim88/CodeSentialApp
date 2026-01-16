@@ -7,10 +7,22 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+// 1. Define the shape of the API response
+interface AnalysisResult {
+  status: string;
+  vulnerability_type: string;
+  cwe_id: string;
+  owasp_category: string;
+  explanation: string;
+  secure_code: string;
+}
+
 export default function Home() {
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
+
+  // 2. Tell State that 'result' can be the interface OR null
+  const [result, setResult] = useState<AnalysisResult | null>(null);
 
   const handleAnalyze = async () => {
     if (!code) return;
@@ -25,7 +37,7 @@ export default function Home() {
       });
 
       if (!response.ok) throw new Error("Server error");
-      const data = await response.json();
+      const data: AnalysisResult = await response.json();
       setResult(data);
     } catch (error) {
       alert("Error connecting to server. Ensure your backend is live!");
@@ -34,7 +46,8 @@ export default function Home() {
     }
   };
 
-  const copyToClipboard = (text) => {
+  // 3. Explicitly type 'text' as string
+  const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     alert("Copied to clipboard!");
   };
@@ -46,12 +59,8 @@ export default function Home() {
       {/* Header */}
       <header className="max-w-7xl mx-auto mb-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          {/* User Branding & App Title */}
           <div className="flex items-center gap-4">
-            <div
-              className={`p-2 rounded-lg text-white
-                }`}
-            >
+            <div className="p-2 rounded-lg text-white">
               <Image
                 src="/icon.png"
                 alt="Code Sentinel"
@@ -73,7 +82,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Optional Action or Badge */}
           <div className="hidden sm:flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm text-xs font-bold text-slate-500 uppercase tracking-wider">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             System Online
@@ -201,8 +209,14 @@ export default function Home() {
   );
 }
 
-// Enhanced Sub-component for the stats grid
-function StatCard({ label, value, icon }) {
+// 4. Properly typed Sub-component props
+interface StatCardProps {
+  label: string;
+  value: string;
+  icon: React.ReactNode;
+}
+
+function StatCard({ label, value, icon }: StatCardProps) {
   return (
     <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-center gap-2 mb-2">
